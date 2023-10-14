@@ -18,7 +18,7 @@ struct MapView: View {
             .edgesIgnoringSafeArea(.vertical)
             .opacity(self.viewModel.showMap ? 1 : 0)
             .offset(x: self.viewModel.showMap ? 0 : -1000)
-            .animation(Animation.easeInOut.delay(1.8), value: self.viewModel.showLocationInfo)
+            .animation(Animation.easeInOut.delay(1.9), value: self.viewModel.showLocationInfo)
             .onTapGesture {
                 withAnimation {
                     self.viewModel.showLocationInfo.toggle()

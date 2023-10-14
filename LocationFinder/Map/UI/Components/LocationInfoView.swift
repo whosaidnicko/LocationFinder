@@ -21,7 +21,7 @@ struct LocationInfoView: View {
                 
                 LocationCell(type: location.type,
                              info: location.info,
-                             color: location.color)
+                             color: location.color.opacity(0.6))
 //                .rotationEffect(.degrees(self.locationVM.showLocationInfo ? 0 : 360))
                 .scaleEffect(self.locationVM.showLocationInfo ? 1 : 0)
                 .offset(x: self.locationVM.showLocationInfo ? 0 : comeFromRight ? 650 : -650)

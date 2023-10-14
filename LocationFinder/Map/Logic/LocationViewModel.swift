@@ -145,7 +145,7 @@ class LocationViewModel:ObservableObject {
     private func calculateDistance(from source: CLLocationCoordinate2D, to destination: CLLocationCoordinate2D)  {
         let sourceLocation = CLLocation(latitude: source.latitude, longitude: source.longitude)
         let destinationLocation = CLLocation(latitude: destination.latitude, longitude: destination.longitude)
-        distance = String(Int(sourceLocation.distance(from: destinationLocation) / 1000))
+        distance = String(Int(sourceLocation.distance(from: destinationLocation) / 1000)) + " km"
     }
     
     public func dimissKeyboard() {

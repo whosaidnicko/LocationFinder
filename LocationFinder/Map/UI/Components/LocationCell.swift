@@ -23,6 +23,7 @@ struct LocationCell: View {
                 
                 Text(self.info)
                     .font(.system(size: 14))
+                    .rotation3DEffect(.degrees(30), axis: (x: 30, y: 30, z: 7))
             }
             .padding(.horizontal)
         }
