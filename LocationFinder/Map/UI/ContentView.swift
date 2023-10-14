@@ -20,8 +20,7 @@ struct ContentView: View {
             MapView(viewModel: viewModel)
             
             VStack {
-                CustomTextfield(userIP: self.$viewModel.searchedIP, locationVM: self.viewModel) {
-                }
+                CustomTextfield(userIP: self.$viewModel.searchedIP, locationVM: self.viewModel)
                 .offset(x: self.viewModel.showTextfield ? 0 : -500)
                 .animation(Animation.easeOut, value: self.viewModel.showTextfield)
             }
@@ -49,7 +48,6 @@ struct ContentView: View {
             }
             //MARK: - Location View
             LocationInfoView(locationVM: viewModel)
-                
         }
     }
     
