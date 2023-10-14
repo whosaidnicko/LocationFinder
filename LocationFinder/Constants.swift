@@ -27,5 +27,6 @@ struct LocationDetails {
     public var latitude: String = "Latitude"
     public var longitude: String = "Longitude"
     public var ip: String = "IP"
+    public var distance: String = "Distance from your IP"
 }
 

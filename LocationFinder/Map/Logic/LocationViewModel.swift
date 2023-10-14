@@ -13,26 +13,33 @@ import MapKit
 
 class LocationViewModel:NSObject, ObservableObject, CLLocationManagerDelegate {
     
-    static var shared = LocationViewModel()
-    
     @Published public var region: MKCoordinateRegion
     @Published public var refreshID = UUID()
     @Published public var showMap: Bool = false
     @Published public var showTextfield: Bool = false
-    @Published public var userIP: String?
     @Published public var searchedIP: String = ""
     @Published public var distance: String = ""
     @Published  public var showIP: Bool = false
     @Published public var findLocation: Location?
+    @Published public var userLocation: Location?
     @Published public var showLocationInfo: Bool = false
     @Published public var locationInfo: [LocationCellModel] = []
+    
+    @Published public var userIP: String? {
+        didSet {
+            guard let userIP = self.userIP else { return }
+            self.fetchIPInformation(ip: userIP) { location in
+                self.userLocation = location
+            }
+        }
+    }
+
     
     private var validCharSet = CharacterSet(charactersIn: "1234567890.")
     private var subCancellable: AnyCancellable!
     
-    
     //MARK: - Init
-    override private init() {
+    override public init() {
         self.region = MKCoordinateRegion(
             center: CLLocationCoordinate2D(
                 latitude: 51.507222,
@@ -43,14 +50,17 @@ class LocationViewModel:NSObject, ObservableObject, CLLocationManagerDelegate {
         
         
         super.init()
+        
         self.fetchUserIP() { userIP in
             self.userIP = userIP
+          
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                 withAnimation {
                     self.showIP = true
                 }
             }
         }
+      
         // textfield accepts just numbers and dot
         self.subCancellable = self.$searchedIP.sink { val in
             if val.rangeOfCharacter(from: self.validCharSet.inverted) != nil {
@@ -95,9 +105,9 @@ class LocationViewModel:NSObject, ObservableObject, CLLocationManagerDelegate {
     }
     
     // fetching ip information from servers
-    func fetchIPInformation(completion: @escaping(Location) -> Void) {
-        if self.searchedIP != "" {
-            guard let url = URL(string: "https://freeipapi.com/api/json/" + self.searchedIP) else {
+    func fetchIPInformation(ip: String, completion: @escaping(Location) -> Void) {
+        if ip != "" {
+            guard let url = URL(string: "https://freeipapi.com/api/json/" + ip) else {
                 return
             }
             
@@ -167,14 +177,22 @@ class LocationViewModel:NSObject, ObservableObject, CLLocationManagerDelegate {
             
         }
         
-        self.fetchIPInformation(completion: { location in
+        self.fetchIPInformation(ip: self.searchedIP,
+                                completion: { location in
+            print(self.userLocation)
+            guard let userLocation = self.userLocation else { return }
+            self.calculateDistance(from: CLLocationCoordinate2D(latitude: userLocation.latitude,
+                                                                longitude: userLocation.longitude),
+                                   to: CLLocationCoordinate2D(latitude: location.latitude,
+                                                              longitude: location.longitude))
             self.locationInfo = [LocationCellModel(type: Constants.locationDetails.country,
                                                    info: location.countryName,
                                                    color: .blue),
                                  LocationCellModel(type: Constants.locationDetails.city,
                                                    info: location.cityName,
                                                    color: .green),
-                                 LocationCellModel(type: Constants.locationDetails.timeZone,                       info: location.timeZone,
+                                 LocationCellModel(type: Constants.locationDetails.timeZone,
+                                                   info: location.timeZone,
                                                    color: .cyan),
                                  LocationCellModel(type: Constants.locationDetails.longitude,
                                                    info: String(location.longitude),
@@ -184,7 +202,10 @@ class LocationViewModel:NSObject, ObservableObject, CLLocationManagerDelegate {
                                                    color: .orange),
                                  LocationCellModel(type: Constants.locationDetails.ip,
                                                    info: location.ipAddress,
-                                                   color: .yellow)]
+                                                   color: .yellow),
+                                 LocationCellModel(type: Constants.locationDetails.distance,
+                                                   info: self.distance,
+                                                   color: .black)]
             
             DispatchQueue.main.async {
                 self.showMap = false

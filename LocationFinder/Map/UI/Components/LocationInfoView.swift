@@ -16,33 +16,19 @@ struct LocationInfoView: View {
     
     var body: some View {
         VStack(spacing: 10){
-            ForEach(Array(locationVM.locationInfo.enumerated()), id: \.element.id) { index, location in
+            ForEach(Array(self.locationVM.locationInfo.enumerated()), id: \.element.id) { index, location in
                 let comeFromRight = index % 2 == 0
-                HStack{
-                    Text(location.type)
-                        .frame(width: 200, height: 46)
-                        .font(.system(size: 10))
-                        .background(location.color)
-                        .cornerRadius(8)
-                    Text(location.info)
-                        .font(.system(size: 10))
-                     
-                }
-                .offset(x: locationVM.showLocationInfo ? 0 : comeFromRight ? 350 : -350)
+                
+                LocationCell(type: location.type,
+                             info: location.info,
+                             color: location.color)
+//                .rotationEffect(.degrees(self.locationVM.showLocationInfo ? 0 : 360))
+                .scaleEffect(self.locationVM.showLocationInfo ? 1 : 0)
+                .offset(x: self.locationVM.showLocationInfo ? 0 : comeFromRight ? 650 : -650)
                 .animation(Animation.default.delay(Double(index) * 0.3 + 0.01),
-                           value: locationVM.showLocationInfo)
+                           value: self.locationVM.showLocationInfo)
                   }
             }
-        
-            
-            //        ForEach(Array(sortedLocationInfo.enumerated()), id: \.offset) { (index, keyValue) in
-            //            let randomColor = Color(red: .random(in: 0...1),
-            //                                     green: .random(in: 0...1),
-            //                                     blue: .random(in: 0...1))
-            //            let (key, value) = keyValue
-            //
-            //
-            //
         }
     }
 

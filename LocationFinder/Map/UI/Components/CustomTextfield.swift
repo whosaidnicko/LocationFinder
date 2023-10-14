@@ -19,11 +19,11 @@ struct CustomTextfield: View {
     
     var body: some View {
         
-        TextField("IP", text: $userIP)
+        TextField("IP", text: self.$userIP)
             .padding()
             .padding(.horizontal)
             .keyboardType(.decimalPad)
-            .focused($keyboard)
+            .focused(self.$keyboard)
             .background(
             RoundedRectangle(cornerRadius: 16)
                 .frame(height: 60)

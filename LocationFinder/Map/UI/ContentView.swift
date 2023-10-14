@@ -9,7 +9,7 @@ import SwiftUI
 
 
 struct ContentView: View {
-    @StateObject private var viewModel: LocationViewModel = LocationViewModel.shared
+    @StateObject private var viewModel: LocationViewModel = LocationViewModel()
     
     private var showOrHideText: Binding<String> {
         return self.viewModel.showIP ? Binding.constant("Hide My IP") : Binding.constant("Show My IP")

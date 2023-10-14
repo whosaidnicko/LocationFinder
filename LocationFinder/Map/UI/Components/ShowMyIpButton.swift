@@ -12,7 +12,7 @@ struct ShowMyIpButton: View {
     @Binding public var buttonTitle: String
     var action: () -> Void
     var body: some View {
-            Text(buttonTitle)
+        Text(self.buttonTitle)
             .font(.custom(Constants.fontName.semiBold, size: 20))
                 .foregroundColor(.yellow)
                 .frame(width: 130,
@@ -21,7 +21,7 @@ struct ShowMyIpButton: View {
                 .background(.black)
                 .cornerRadius(16)
                 .onTapGesture {
-                    action()
+                    self.action()
                 }
     }
 }
